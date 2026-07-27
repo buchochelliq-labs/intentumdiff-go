@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version: "1.22"
+      # Tests self-skip without INTENTDIFF_CORE_LIB; Phase D wires the engine artifact.
+      # -unsafeptr=false: the Windows loader converts ONE engine-returned foreign heap
+      # uintptr to a Pointer (documented in loader_windows.go); vet's heuristic flags it.
+      - run: go vet -unsafeptr=false ./... && go build ./... && go test ./...
