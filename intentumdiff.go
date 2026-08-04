@@ -1,15 +1,15 @@
-// Package intentdiff is the thin Go binding for the IntentDiff engine.
+// Package intentumdiff is the thin Go binding for the IntentumDiff engine.
 //
-// The engine (github.com/buchochelliq-labs/intentdiff-core) ships a native shared
+// The engine (github.com/buchochelliq-labs/intentumdiff-core) ships a native shared
 // library exposing ONE stable C ABI:
 //
-//	intentdiff_call(name *char, args_json *char) -> *char   // heap JSON envelope
-//	intentdiff_free(ptr *char)                               // frees the envelope
+//	intentumdiff_call(name *char, args_json *char) -> *char   // heap JSON envelope
+//	intentumdiff_free(ptr *char)                               // frees the envelope
 //
 // This binding does zero functional work: it marshals arguments to JSON, calls the
 // engine, and maps the {ok, result, error, error_type} envelope to Go values —
 // exactly like the Python ctypes binding.
-package intentdiff
+package intentumdiff
 
 import (
 	"encoding/json"
@@ -43,16 +43,16 @@ func (e *EngineError) Unwrap() error {
 	return nil
 }
 
-// Engine is a loaded IntentDiff core library.
+// Engine is a loaded IntentumDiff core library.
 type Engine struct {
 	lib nativeLib
 }
 
-// Load opens the engine shared library (intentdiff_rust_core.{dll,so,dylib}).
+// Load opens the engine shared library (intentumdiff_rust_core.{dll,so,dylib}).
 func Load(path string) (*Engine, error) {
 	lib, err := openNative(path)
 	if err != nil {
-		return nil, fmt.Errorf("intentdiff: load %q: %w", path, err)
+		return nil, fmt.Errorf("intentumdiff: load %q: %w", path, err)
 	}
 	return &Engine{lib: lib}, nil
 }
@@ -65,7 +65,7 @@ func (e *Engine) Call(name string, args ...any) (json.RawMessage, error) {
 	}
 	argsJSON, err := json.Marshal(args)
 	if err != nil {
-		return nil, fmt.Errorf("intentdiff: marshal args: %w", err)
+		return nil, fmt.Errorf("intentumdiff: marshal args: %w", err)
 	}
 	raw, err := e.lib.call(name, string(argsJSON))
 	if err != nil {
@@ -73,7 +73,7 @@ func (e *Engine) Call(name string, args ...any) (json.RawMessage, error) {
 	}
 	var env envelope
 	if err := json.Unmarshal([]byte(raw), &env); err != nil {
-		return nil, fmt.Errorf("intentdiff: bad envelope: %w", err)
+		return nil, fmt.Errorf("intentumdiff: bad envelope: %w", err)
 	}
 	if !env.OK {
 		return nil, &EngineError{Type: env.ErrorType, Message: env.Error}

@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version: "1.22"
-      # Tests self-skip without INTENTDIFF_CORE_LIB; Phase D wires the engine artifact.
+      # Tests self-skip without INTENTUMDIFF_CORE_LIB; Phase D wires the engine artifact.
       # -unsafeptr=false: the Windows loader converts ONE engine-returned foreign heap
       # uintptr to a Pointer (documented in loader_windows.go); vet's heuristic flags it.
       - run: go vet -unsafeptr=false ./... && go build ./... && go test ./...

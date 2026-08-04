@@ -1,4 +1,4 @@
-package intentdiff
+package intentumdiff
 
 import (
 	"errors"
@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-// The tests need a built engine library; set INTENTDIFF_CORE_LIB to its path
-// (intentdiff_rust_core.dll / .so / .dylib from intentdiff-core).
+// The tests need a built engine library; set INTENTUMDIFF_CORE_LIB to its path
+// (intentumdiff_rust_core.dll / .so / .dylib from intentumdiff-core).
 func loadEngine(t *testing.T) *Engine {
 	t.Helper()
-	path := os.Getenv("INTENTDIFF_CORE_LIB")
+	path := os.Getenv("INTENTUMDIFF_CORE_LIB")
 	if path == "" {
-		t.Skip("INTENTDIFF_CORE_LIB not set — needs a built intentdiff-core library")
+		t.Skip("INTENTUMDIFF_CORE_LIB not set — needs a built intentumdiff-core library")
 	}
 	e, err := Load(path)
 	if err != nil {

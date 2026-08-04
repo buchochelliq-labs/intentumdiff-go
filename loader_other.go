@@ -1,6 +1,6 @@
 //go:build !windows
 
-package intentdiff
+package intentumdiff
 
 import "errors"
 
@@ -9,7 +9,7 @@ import "errors"
 // platform-independent.
 type nativeLib struct{}
 
-var errUnsupported = errors.New("intentdiff: non-Windows loader not yet implemented (dlopen seam pending)")
+var errUnsupported = errors.New("intentumdiff: non-Windows loader not yet implemented (dlopen seam pending)")
 
 func openNative(path string) (nativeLib, error) { return nativeLib{}, errUnsupported }
 

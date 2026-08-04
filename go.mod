@@ -1,3 +1,3 @@
-module github.com/buchochelliq-labs/intentdiff-go
+module github.com/buchochelliq-labs/intentumdiff-go
 
 go 1.22

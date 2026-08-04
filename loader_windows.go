@@ -1,6 +1,6 @@
 //go:build windows
 
-package intentdiff
+package intentumdiff
 
 import (
 	"fmt"
@@ -20,13 +20,13 @@ func openNative(path string) (nativeLib, error) {
 	if err != nil {
 		return nativeLib{}, err
 	}
-	callProc, err := dll.FindProc("intentdiff_call")
+	callProc, err := dll.FindProc("intentumdiff_call")
 	if err != nil {
-		return nativeLib{}, fmt.Errorf("intentdiff_call not exported: %w", err)
+		return nativeLib{}, fmt.Errorf("intentumdiff_call not exported: %w", err)
 	}
-	freeProc, err := dll.FindProc("intentdiff_free")
+	freeProc, err := dll.FindProc("intentumdiff_free")
 	if err != nil {
-		return nativeLib{}, fmt.Errorf("intentdiff_free not exported: %w", err)
+		return nativeLib{}, fmt.Errorf("intentumdiff_free not exported: %w", err)
 	}
 	return nativeLib{dll: dll, call_: callProc, free: freeProc}, nil
 }
@@ -45,7 +45,7 @@ func (l nativeLib) call(name, argsJSON string) (string, error) {
 		uintptr(unsafe.Pointer(cArgs)),
 	)
 	if ret == 0 {
-		return "", fmt.Errorf("intentdiff_call returned NULL (allocation/encoding failure)")
+		return "", fmt.Errorf("intentumdiff_call returned NULL (allocation/encoding failure)")
 	}
 	// Copy the C string out, then free the engine allocation.
 	out := goString(ret)
